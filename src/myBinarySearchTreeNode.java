@@ -1,3 +1,5 @@
+import java.nio.channels.spi.AbstractInterruptibleChannel;
+
 class myBinarySearchTreeNode{
   int myValue;
   myBinarySearchTreeNode left;
@@ -14,9 +16,11 @@ class myBinarySearchTreeNode{
   myBinarySearchTreeNode(int[] A){
     // creates a new Binary Search Tree rooted at the first value in the array
     /// by inserting elements into the tree in the order they are given in A.
-    myBinarySearchTreeNode tree = new myBinarySearchTreeNode(A[0]);
-    for(int i = 1; i < A.length;i++){
-      tree.insert(A[i]);
+
+    myValue = A[0]; // assigns first value of array as the root
+      // loop populates the tree using insert method to define correct side for array values
+    for(int i = 1; i < A.length; i++){
+      this.insert(A[i]);
     }
 
   }
@@ -29,23 +33,24 @@ class myBinarySearchTreeNode{
     //    * in the left subtree,
     //    * or in the right subtree.
     // If the value already exists in the tree, no action is taken.
-    if(inValue > myValue){
-      if(right == null){
+
+    if(inValue > myValue){  // in case the value inserted is more than my current root, it is sent to the right child
+      if(right == null){  // if my right child is empty, the new value takes its place
         right = new myBinarySearchTreeNode(inValue);
       }
-      else{
+      else{ // if right child exists I make a recursive call to traverse further down the tree
         right.insert(inValue);
       }
     }
-    else if(inValue < myValue){
-      if(left == null){
+    else if(inValue < myValue){ // in case value inserted is less than my current root, it is sent to the left child
+      if(left == null){ // if my left child is empty, the new value takes its place
         left = new myBinarySearchTreeNode(inValue);
       }
-      else{
+      else{ // if left child exists I make a recursive call to traverse further down the tree
         left.insert(inValue);
       }
     }
-    else {
+    else {  // in case the value already exists within the tree, an error is sent and nothing is added
       System.out.println("Error: Can't add duplicates");
     }
   }
@@ -53,28 +58,15 @@ class myBinarySearchTreeNode{
   public int height(){
      // This method recursively calculates the height of the entire (sub)tree.
      // This method will take O(n) time
-    int root = myValue;
     int leftH = 0;
     int rightH = 0;
-    if(left != null){
-       if(left.myValue < root){
-         leftH += 1;
-       }
-       else if(left.myValue > root){
-         rightH += 1;
-       }
-      left.height();
+    if(left != null){   // begins traversing the left subtree and keeps track of the edges counted
+      leftH = left.height() + 1;
     }
-    if(right != null){
-      if(right.myValue < root){
-        leftH += 1;
-      }
-      else if(right.myValue > root){
-        rightH += 1;
-      }
-      right.height();
+    if(right != null){  // begins traversing the right subtree while keeping track of the edges counted
+      rightH = right.height() + 1;
     }
-    return Math.max(rightH, leftH);
+    return Math.max(rightH, leftH); // returns the greater value between both counters collected
   }
   
   public int depth(int search){
@@ -83,31 +75,34 @@ class myBinarySearchTreeNode{
      // Note that if the tree is a proper BST, this method should complete in O(log n) time.
      // Additionally, remember that the depth is the number of nodes on the path from a node to the root 
      // (i.e. the number of the recursive calls).
-    if(search < myValue){
+
+      // begins by determining whether the value is found in the left or right subtree
+    if(search < myValue){ // less than my root means it is in my left subtree
       if(left != null) {
-        return left.depth(search) + 1;
+        return 1 + left.depth(search);  // recursively traverses tree while counting edges traversed
       }
     }
-    else if(search > myValue){
+    else if(search > myValue){  // more than my root means it is in my right subtree
       if(right != null) {
-        return right.depth(search) + 1;
+        return 1 + right.depth(search); // recursively traverses tree while counting edges traversed
       }
     }
-    else {
+    else {  // if the value is found a zero is returned and the counts are called back and returned
       return 0;
     }
-    return -1;
+    return -1;  // if the value is not found within the tree a -1 is returned by default
   }
 
   public int size(){
-    int sum = 1;
-    if(left != null){
+    // This method recursively calculates the number of nodes in the (sub)tree.
+    int sum = 1;  // counts my root to begin with
+    if(left != null){ // traverses left subtree if it is not null and keeps track of nodes encountered with sum variable
       sum += left.size();
     }
-    if(right != null){
+    if(right != null){  //traverses right subtree if it is not null and keeps track of nodes in the same sum variable
       sum += right.size();
     }
-    return sum;
+    return sum; // returns the sum of all nodes in both subtrees
   }
   
   // Utility function included so you can debug your solution.
