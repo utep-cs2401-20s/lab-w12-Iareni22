@@ -51,7 +51,7 @@ class myBinarySearchTreeNode{
       }
     }
     else {  // in case the value already exists within the tree, an error is sent and nothing is added
-      System.out.println("Error: Can't add duplicates");
+      System.out.println("Error: No duplicates allowed");
     }
   }
   
@@ -79,12 +79,24 @@ class myBinarySearchTreeNode{
       // begins by determining whether the value is found in the left or right subtree
     if(search < myValue){ // less than my root means it is in my left subtree
       if(left != null) {
-        return 1 + left.depth(search);  // recursively traverses tree while counting edges traversed
+        int leftDepth = left.depth(search); // recursively traverses tree while counting edges traversed
+        if(leftDepth == -1){  // if the value is not found the method reverses all additions previously made
+          return -1;
+        }
+        else{
+          return 1 + left.depth(search);
+        }
       }
     }
     else if(search > myValue){  // more than my root means it is in my right subtree
       if(right != null) {
-        return 1 + right.depth(search); // recursively traverses tree while counting edges traversed
+        int rightDepth = right.depth(search); // recursively traverses tree while counting edges traversed
+        if(rightDepth == -1){ // if the value is not found the method reverses all additions previously made
+          return -1;
+        }
+        else{
+          return 1 + right.depth(search);
+        }
       }
     }
     else {  // if the value is found a zero is returned and the counts are called back and returned
